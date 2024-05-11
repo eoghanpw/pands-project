@@ -3,14 +3,13 @@
 # Analysis of Fisher's Iris data set.
 # Author: Eoghan Walsh.
 
-# Import python modules numpy, pandas, matplotlib.pyplot and os.path.
-import numpy as np
+
+# Import python modules pandas, matplotlib.pyplot and numpy.
 import pandas as pd
 import matplotlib.pyplot as plt
-import os.path
+import numpy as np
 
-# Import the Iris data set to a pandas DataFrame and
-# add column headers.
+# Import the Iris data set to a pandas DataFrame and add column headers.
 # Adapted from:
 # https://sparkbyexamples.com/pandas/pandas-add-header-row-to-dataframe/.
 column_names = ("sepal_length_cm", "sepal_width_cm", "petal_length_cm",
@@ -21,18 +20,20 @@ iris = pd.read_csv("iris.csv", names=column_names)
 # Show the data set.
 print(iris)
 
+
 # 1. OUTPUT A SUMMARY OF EACH VARIABLE TO A SINGLE TEXT FILE.
 
 # Create the filename.
 FILENAME = "iris_variable_summary.txt"
 
-# Generate descriptive statistics for each variable.
-# Ref: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html.
+# Generate summary statistics for each variable.
+# Reference:
+# https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html.
 summary = iris.describe()
 
-# Convert pandas DataFrame to string so it can
-# be written to a text file.
-# Ref: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html.
+# Convert to string so it can be written to a text file.
+# Reference:
+# https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html.
 summary_csv = summary.to_csv()
 
 
@@ -45,36 +46,49 @@ def variable_summary():
 # Run the function.
 variable_summary()
 
+
 # 2. SAVE A HISTOGRAM OF EACH VARIABLE TO PNG FILES.
 
-# Get the sepal lengths per class and convert to numpy array.
-sepal_length_setosa = iris[iris["class"] == "Iris-setosa"]["sepal_length_cm"].to_numpy()
-sepal_length_versicolor = iris[iris["class"] == "Iris-versicolor"]["sepal_length_cm"].to_numpy()
-sepal_length_virginica = iris[iris["class"] == "Iris-virginica"]["sepal_length_cm"].to_numpy()
+# List of variables for the histograms.
+columns_hist = ("sepal_length_cm", "sepal_width_cm", "petal_length_cm",
+                "petal_width_cm")
 
-# Use matplotlib subplots to create the histogram.
-fig, ax = plt.subplots()
+# List of x axis labels for each histogram.
+xlabel_hist = ("sepal length (in centimetres)", "sepal width (in centimetres)",
+               "petal length (in centimetres)", "petal width (in centimetres)")
 
-# Select the plot type, legend label, bar colour, transparency, number of bins.
-ax.hist(sepal_length_setosa, label="Setosa", color="tab:green", edgecolor=None,
-        alpha=0.5, bins=None)
+# List of titles for each histogram.
+title_hist = ("Iris Sepal Lengths", "Iris Sepal Widths", "Iris Petal Lengths",
+              "Iris Petal Widths")
 
-ax.hist(sepal_length_versicolor, label="Versicolor", color="tab:orange", edgecolor=None,
-        alpha=0.5, bins=None)
+# Subsets of the data set by class.
+setosa_hist = iris["class"] == "Iris-setosa"
+versicolor_hist = iris["class"] == "Iris-versicolor"
+virginica_hist = iris["class"] == "Iris-virginica"
 
-ax.hist(sepal_length_virginica, label="Virginica", color="tab:blue", edgecolor=None,
-        alpha=0.5, bins=None)
+# For loop with zip function to create histogram for each variable.
+# Reference:
+# https://realpython.com/python-zip-function/#looping-over-multiple-iterables.
+for col, xlabel, title in zip(columns_hist, xlabel_hist, title_hist):
 
-# Set the axis labels, axis limits, title.
-ax.set_xlabel("sepal length (in centimetres)")
-ax.set_ylabel("frequency")
-ax.set_title("Iris Sepal Lengths")
+    # Use matplotlib subplots to create the histogram.
+    fig, ax = plt.subplots()
 
-# Add legend.
-ax.legend()
+    # Select plot type, data, label, bar colour, transparency, number of bins.
+    ax.hist(iris[setosa_hist][col], label="Setosa", color="tab:green",
+            alpha=0.5, bins=None)
 
-# Show the histogram.
-#plt.show()
+    ax.hist(iris[versicolor_hist][col], label="Versicolor", color="tab:orange",
+            alpha=0.5, bins=None)
 
-# Save the histogram.
-plt.savefig("sepal_length_hist.png")
+    ax.hist(iris[virginica_hist][col], label="Virginica", color="tab:blue",
+            alpha=0.5, bins=None)
+
+    # Set the axis labels, title, legend.
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("frequency")
+    ax.set_title(title)
+    ax.legend()
+
+    # Save each histogram as png file.
+    plt.savefig(f"{col}_hist.png")
