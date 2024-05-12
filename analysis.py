@@ -159,3 +159,120 @@ for x in variables_plot:
 
         # Show scatter plots.
         plt.show()
+
+
+# 4. FURTHER ANALYSIS
+
+# Plot Petal Length against Petal Width.
+
+# Get petal lengths and petal widths from data set.
+petal_l = iris["petal_length_cm"]
+petal_w = iris["petal_width_cm"]
+
+# Get the coefficents for regression lines with numpy.
+# Adapted from:
+# https://www.datacamp.com/tutorial/line-plots-in-matplotlib-with-python#adding-a-matplotlib-regression-line-aregr
+petal_coefficients = np.polyfit(petal_l, petal_w, 1)
+p_petal = np.poly1d(petal_coefficients)
+
+# Get the correlation coefficient with numpy.
+petal_corr = np.corrcoef(petal_l, petal_w)
+
+# Create plot with matplotlib subplots.
+fig, ax = plt.subplots()
+
+# Select plot type, x & y data, marker shape, colour.
+ax.plot(petal_l, petal_w, "o", color="tab:purple", alpha=0.5)
+
+# Add regression line to plot.
+ax.plot(petal_l, p_petal(petal_l), "-", color="tab:red",
+        label="Regression Line")
+
+# Set axis labels, title and legend.
+ax.set_xlabel("petal length (in centimetres)")
+ax.set_ylabel("petal width (in centimetres)")
+ax.set_title("Iris Petal Length vs Petal Width")
+ax.legend(loc="upper left")
+
+# Add correlation coefficient to plot.
+# Reference:
+# https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_fontdict.html
+ax.text(1, 2, f"Correlation Coefficient: {petal_corr[0,1:]}")
+
+# Show plot.
+plt.show()
+
+# Plot Petal Length against Petal Width per Class.
+
+# Get petal lengths and petal widths per class from data set.
+setosa_petal_l = iris[iris["class"] == "Iris-setosa"]["petal_length_cm"]
+setosa_petal_w = iris[iris["class"] == "Iris-setosa"]["petal_width_cm"]
+
+versicolor_petal_l = iris[
+    iris["class"] == "Iris-versicolor"]["petal_length_cm"]
+versicolor_petal_w = iris[iris["class"] == "Iris-versicolor"]["petal_width_cm"]
+
+virginica_petal_l = iris[iris["class"] == "Iris-virginica"]["petal_length_cm"]
+virginica_petal_w = iris[iris["class"] == "Iris-virginica"]["petal_width_cm"]
+
+# Get the coefficents for regression lines with numpy.
+setosa_coefficients = np.polyfit(setosa_petal_l, setosa_petal_w, 1)
+p_setosa = np.poly1d(setosa_coefficients)
+
+versicolor_coefficients = np.polyfit(versicolor_petal_l, versicolor_petal_w, 1)
+p_versicolor = np.poly1d(versicolor_coefficients)
+
+virginica_coefficients = np.polyfit(virginica_petal_l, virginica_petal_w, 1)
+p_virginica = np.poly1d(virginica_coefficients)
+
+# Get the correlation coefficient with numpy.
+setosa_corr = np.corrcoef(setosa_petal_l, setosa_petal_w)
+versicolor_corr = np.corrcoef(versicolor_petal_l, versicolor_petal_w)
+virginica_corr = np.corrcoef(virginica_petal_l, virginica_petal_w)
+
+# Create figure with matplotlib subplots.
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 6), sharex=True,
+                                    sharey=True)
+
+# Plot setosa petal length vs petal width.
+ax1.plot(setosa_petal_l, setosa_petal_w, "o", color="tab:green", alpha=0.5)
+
+# Add regression line.
+ax1.plot(setosa_petal_l, p_setosa(setosa_petal_l), "-", color="tab:red",
+         label="Regression Line")
+
+# Plot versicolor petal length vs petal width.
+ax2.plot(versicolor_petal_l, versicolor_petal_w, "o", color="tab:orange",
+         alpha=0.5)
+
+# Add regression line.
+ax2.plot(versicolor_petal_l, p_versicolor(versicolor_petal_l), "-",
+         color="tab:red", label="Regression Line")
+
+# Plot virginica petal length vs petal width.
+ax3.plot(virginica_petal_l, virginica_petal_w, "o", color="tab:blue",
+         alpha=0.5)
+
+# Add regression line.
+ax3.plot(virginica_petal_l, p_virginica(virginica_petal_l), "-",
+         color="tab:red", label="Regression Line")
+
+# Set axis labels, legend, title, text.
+ax1.set_ylabel('petal width (in centimetres)')
+ax1.legend(loc="upper left")
+ax1.set_title("Setosa")
+ax1.text(3, 0.5, f"Correlation Coefficient:\n{setosa_corr[0,1:]}")
+
+ax2.set_xlabel('petal length (in centimetres)')
+ax2.legend(loc="upper left")
+ax2.set_title("Versicolor")
+ax2.text(3, 0.5, f"Correlation Coefficient:\n{versicolor_corr[0,1:]}")
+
+ax3.legend(loc="upper left")
+ax3.set_title("Virginica")
+ax3.text(3, 0.5, f"Correlation Coefficient:\n{virginica_corr[0,1:]}")
+
+fig.suptitle('Petal Length vs Petal Width per Class')
+
+# Show plot.
+plt.show()
