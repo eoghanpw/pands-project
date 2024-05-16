@@ -1,2 +1,3 @@
-# pands-project
-Programming and Scripting Project
+# Programming and Scripting Project: The Iris Dataset.
+
+

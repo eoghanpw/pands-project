@@ -58,36 +58,35 @@ versicolor_hist = iris["class"] == "Iris-versicolor"
 virginica_hist = iris["class"] == "Iris-virginica"
 
 # For loop to create histogram for each variable.
-for var in variables_hist:
+for variable in variables_hist:
 
     # Use matplotlib subplots to create the histogram.
     fig, ax = plt.subplots()
 
     # Select plot type, data, label, bar colour, transparency.
-    ax.hist(iris[setosa_hist][var], label="Setosa", color="tab:green",
-            alpha=0.5)
+    ax.hist(iris[setosa_hist][variable], label="Setosa",
+            color="tab:green", alpha=0.5)
 
-    ax.hist(iris[versicolor_hist][var], label="Versicolor", color="tab:orange",
-            alpha=0.5)
+    ax.hist(iris[versicolor_hist][variable], label="Versicolor",
+            color="tab:orange", alpha=0.5)
 
-    ax.hist(iris[virginica_hist][var], label="Virginica", color="tab:blue",
-            alpha=0.5)
+    ax.hist(iris[virginica_hist][variable], label="Virginica",
+            color="tab:blue", alpha=0.5)
 
-    # Set the axis labels..
-    xlabel = var.replace("_", " ").replace("cm", "(in centimetres)")
-
-    ax.set_xlabel(xlabel)
+    # Set the axis labels.
+    x_label_hist = variable.replace("_", " ").replace("cm", "(in centimetres)")
+    ax.set_xlabel(x_label_hist)
     ax.set_ylabel("frequency")
 
     # Set the title.
-    title_hist = var.replace("_", " ").replace(" cm", "s").title()
+    title_hist = variable.replace("_", " ").replace(" cm", "s").title()
     ax.set_title(f"Iris {title_hist} per Class")
 
     # Add legend.
     ax.legend()
 
     # Save each histogram as png file.
-    plt.savefig(f"{var}_hist.png")
+    plt.savefig(f"{variable}_hist.png")
 
     # Close each figure.
     plt.close()
@@ -98,15 +97,16 @@ for var in variables_hist:
 # seaborn pairplot.
 
 # Dictionary of colours for the pairplots.
-colours = {"Iris-setosa": "tab:green", "Iris-versicolor": "tab:orange",
-           "Iris-virginica": "tab:blue"}
+colours_pairplt = {"Iris-setosa": "tab:green", "Iris-versicolor": "tab:orange",
+                   "Iris-virginica": "tab:blue"}
 
 # Use seaborn pairplot to generate one figure containing all scatter plots
 # for each pair of variables.
 # Adapted from:
 # https://seaborn.pydata.org/generated/seaborn.pairplot.html#seaborn-pairplot.
 # https://stackoverflow.com/a/47200170
-sns.pairplot(iris, hue="class", palette=colours, plot_kws={"alpha": 0.5})
+sns.pairplot(iris, hue="class", palette=colours_pairplt,
+             plot_kws={"alpha": 0.5})
 
 # Show plot.
 plt.show()
@@ -126,33 +126,33 @@ virginica_plot = iris["class"] == "Iris-virginica"
 # continue statement to skip when x equals y. Will generate separate
 # figure for each scatter plot.
 # Reference: https://www.w3schools.com/python/python_for_loops.asp
-for x in variables_plot:
-    for y in variables_plot:
-        if x == y:
+for x_var in variables_plot:
+    for y_var in variables_plot:
+        if x_var == y_var:
             continue
 
         # Use matplotlib subplots to create the histogram.
         fig, ax = plt.subplots()
 
         # Select plot type, x & y data, marker shape, label, colour.
-        ax.plot(iris[setosa_plot][x], iris[setosa_plot][y], "o",
-                label="Setosa", color="tab:green", alpha=0.5)
+        ax.plot(iris[setosa_plot][x_var], iris[setosa_plot][y_var],
+                "o", label="setosa", color="tab:green", alpha=0.5)
 
-        ax.plot(iris[versicolor_plot][x], iris[versicolor_plot][y], "o",
-                label="Versicolor", color="tab:orange", alpha=0.5)
+        ax.plot(iris[versicolor_plot][x_var], iris[versicolor_plot][y_var],
+                "o", label="versicolor", color="tab:orange", alpha=0.5)
 
-        ax.plot(iris[virginica_plot][x], iris[virginica_plot][y], "o",
-                label="Virginica", color="tab:blue", alpha=0.5)
+        ax.plot(iris[virginica_plot][x_var], iris[virginica_plot][y_var],
+                "o", label="virginica", color="tab:blue", alpha=0.5)
 
         # Set the axis labels.
-        ax.set_xlabel(x)
-        ax.set_ylabel(y)
+        ax.set_xlabel(x_var)
+        ax.set_ylabel(y_var)
 
         # Set the title.
-        xtitle = x.replace("_", " ").replace(" cm", "").title()
-        ytitle = y.replace("_", " ").replace(" cm", "").title()
+        x_title_plot = x_var.replace("_", " ").replace(" cm", "").title()
+        y_title_plot = y_var.replace("_", " ").replace(" cm", "").title()
 
-        ax.set_title(f"{xtitle} vs {ytitle} per Class")
+        ax.set_title(f"{x_title_plot} vs {y_title_plot} per Class")
 
         # Add legend.
         ax.legend()
@@ -258,12 +258,12 @@ ax3.plot(virginica_petal_l, p_virginica(virginica_petal_l), "-",
          color="tab:red", label="Regression Line")
 
 # Set axis labels, legend, title, text.
-ax1.set_ylabel('petal width (in centimetres)')
+ax1.set_ylabel("petal width (in centimetres)")
 ax1.legend(loc="upper left")
 ax1.set_title("Setosa")
 ax1.text(3, 0.5, f"Correlation Coefficient:\n{setosa_corr[0,1:]}")
 
-ax2.set_xlabel('petal length (in centimetres)')
+ax2.set_xlabel("petal length (in centimetres)")
 ax2.legend(loc="upper left")
 ax2.set_title("Versicolor")
 ax2.text(3, 0.5, f"Correlation Coefficient:\n{versicolor_corr[0,1:]}")
@@ -272,7 +272,46 @@ ax3.legend(loc="upper left")
 ax3.set_title("Virginica")
 ax3.text(3, 0.5, f"Correlation Coefficient:\n{virginica_corr[0,1:]}")
 
-fig.suptitle('Petal Length vs Petal Width per Class')
+fig.suptitle("Petal Length vs Petal Width per Class")
 
 # Show plot.
 plt.show()
+
+# Function to create scatter plot.
+
+
+def scatter_plot():
+
+    # User to input variables.
+    print("Iris dataset variables:")
+    print("petal_length_cm")
+    print("petal_width_cm")
+    print("sepal_length_cm")
+    print("sepal_width_cm")
+    x = input("Enter x axis variable from above list: ")
+    y = input("Enter y axis variable from above list: ")
+
+    # Subsets of the iris dataset by class.
+    setosa = iris["class"] == "Iris-setosa"
+    versicolor = iris["class"] == "Iris-versicolor"
+    virginica = iris["class"] == "Iris-virginica"
+
+    # Title for scatter plot.
+    x_title = (x.replace("_", " ").replace(" cm", "").title())
+    y_title = (y.replace("_", " ").replace(" cm", "").title())
+
+    # Creat scatter plot.
+    fig, ax = plt.subplots()
+    ax.scatter(iris[setosa][x], iris[setosa][y], label="setosa")
+    ax.scatter(iris[versicolor][x], iris[versicolor][y], label="versicolor")
+    ax.scatter(iris[virginica][x], iris[virginica][y], label="virginica")
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
+    ax.set_title(f"{x_title} vs {y_title}")
+    ax.legend()
+
+    # Show plot.
+    plt.show()
+
+
+scatter_plot()
