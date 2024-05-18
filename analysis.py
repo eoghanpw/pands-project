@@ -1,6 +1,6 @@
 # analysis.py
 # Programming and Scripting Project.
-# Analysis of Fisher's Iris data set.
+# Analysis of Fisher's Iris dataset.
 # Author: Eoghan Walsh.
 
 
@@ -11,7 +11,7 @@ import seaborn as sns
 import numpy as np
 
 
-# Import the Iris data set to a pandas DataFrame and add column headers.
+# Import the Iris dataset to a pandas DataFrame and add column headers.
 # Adapted from:
 # https://sparkbyexamples.com/pandas/pandas-add-header-row-to-dataframe/.
 column_names = ("sepal_length_cm", "sepal_width_cm", "petal_length_cm",
@@ -19,7 +19,18 @@ column_names = ("sepal_length_cm", "sepal_width_cm", "petal_length_cm",
 
 iris = pd.read_csv("iris.csv", names=column_names)
 
+# About the dataset.
 
+# Show first 5 rows of the dataset.
+print(iris.head(5))
+
+# Show the shape of the dataset.
+print(f"Rows, Columns: {iris.shape}")
+
+# Show count of each species of iris.
+print(iris["class"].value_counts())
+
+'''
 # 1. OUTPUT A SUMMARY OF EACH VARIABLE TO A SINGLE TEXT FILE.
 
 # Create the filename.
@@ -334,3 +345,4 @@ def scatter_plot():
 
 
 scatter_plot()
+'''
