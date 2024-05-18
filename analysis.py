@@ -30,7 +30,7 @@ print(f"Rows, Columns: {iris.shape}")
 # Show count of each species of iris.
 print(iris["class"].value_counts())
 
-'''
+
 # 1. OUTPUT A SUMMARY OF EACH VARIABLE TO A SINGLE TEXT FILE.
 
 # Create the filename.
@@ -52,7 +52,7 @@ def variable_summary():
         f.write(summary)
 
 
-# Run the function.
+# Call the function.
 variable_summary()
 
 
@@ -105,11 +105,13 @@ def histogram_png():
         plt.close()
 
 
-# Run the function.
+# Call the function.
 histogram_png()
 
 
 # 3. OUTPUT A SCATTER PLOT OF EACH PAIR OF VARIABLES.
+
+# seaborn pairplot.
 
 # Funtion to output seaborn pairplot.
 def iris_pairplot():
@@ -136,12 +138,14 @@ def iris_pairplot():
     plt.show()
 
 
-# Run the function.
+# Call the function.
 iris_pairplot()
 
 
-# Funtion to output matplotlib.pyplot plots.
-def iris_plots():
+# matplotlib scatter plots.
+
+# Funtion to output scatter plots for each pair of variables.
+def all_plots():
 
     # List of variables for the plots.
     variables_plot = ("sepal_length_cm", "sepal_width_cm",
@@ -163,15 +167,19 @@ def iris_plots():
             # Use matplotlib subplots to create the histogram.
             fig, ax = plt.subplots()
 
-            # Select plot type, x & y data, marker shape, label, colour.
-            ax.plot(iris[setosa_plot][x_var], iris[setosa_plot][y_var],
-                    "o", label="setosa", color="tab:green", alpha=0.5)
+            # Select plot type, x & y data, label, colour.
+            ax.scatter(iris[setosa_plot][x_var],
+                       iris[setosa_plot][y_var],
+                       label="setosa", color="tab:green", alpha=0.5)
 
-            ax.plot(iris[versicolor_plot][x_var], iris[versicolor_plot][y_var],
-                    "o", label="versicolor", color="tab:orange", alpha=0.5)
+            ax.scatter(iris[versicolor_plot][x_var],
+                       iris[versicolor_plot][y_var],
+                       label="versicolor", color="tab:orange", alpha=0.5)
 
-            ax.plot(iris[virginica_plot][x_var], iris[virginica_plot][y_var],
-                    "o", label="virginica", color="tab:blue", alpha=0.5)
+            ax.scatter(iris[virginica_plot][x_var],
+                       iris[virginica_plot][y_var],
+                       label="virginica", color="tab:blue", alpha=0.5)
+
             # Set the axis labels.
             ax.set_xlabel(x_var)
             ax.set_ylabel(y_var)
@@ -180,6 +188,7 @@ def iris_plots():
             x_title_plot = x_var.replace("_", " ").replace(" cm", "").title()
             y_title_plot = y_var.replace("_", " ").replace(" cm", "").title()
             ax.set_title(f"{x_title_plot} vs {y_title_plot} per Class")
+
             # Add legend.
             ax.legend()
 
@@ -187,139 +196,48 @@ def iris_plots():
             plt.show()
 
 
-# Run the function.
-iris_plots()
+# Function to create scatter plot for one pair of variables.
+def single_plot():
 
+    # User to input x variable.
+    x = input("Please choose x variable from the following:\n"
+              "\tpetal_length_cm\n"
+              "\tpetal_width_cm\n"
+              "\tsepal_length_cm\n"
+              "\tsepal_width_cm\n"
+              "Enter x axis variable: ")
 
-# 4. FURTHER ANALYSIS
+    # While loop to prompt user if incorrect variable input.
+    # Reference:
+    # https://initialcommit.com/blog/python-while-loop-multiple-conditions
+    while (x != "petal_length_cm" and x != "petal_width_cm" and
+           x != "sepal_length_cm" and x != "sepal_width_cm"):
 
-# Plot Petal Length against Petal Width.
+        x = input("Error. Please choose x variable from the following:\n"
+                  "\tpetal_length_cm\n"
+                  "\tpetal_width_cm\n"
+                  "\tsepal_length_cm\n"
+                  "\tsepal_width_cm\n"
+                  "Enter x axis variable: ")
 
-# Get petal lengths and petal widths from data set.
-petal_l = iris["petal_length_cm"]
-petal_w = iris["petal_width_cm"]
+    # User to input y variable.
+    y = input("Please choose y variable from the following:\n"
+              "\tpetal_length_cm\n"
+              "\tpetal_width_cm\n"
+              "\tsepal_length_cm\n"
+              "\tsepal_width_cm\n"
+              "Enter y axis variable: ")
 
-# Get the coefficents for regression lines with numpy.
-# Adapted from:
-# https://www.datacamp.com/tutorial/line-plots-in-matplotlib-with-python#adding-a-matplotlib-regression-line-aregr
-petal_coefficients = np.polyfit(petal_l, petal_w, 1)
-p_petal = np.poly1d(petal_coefficients)
+    # While loop to prompt user if incorrect variable input.
+    while (y != "petal_length_cm" and y != "petal_width_cm" and
+           y != "sepal_length_cm" and y != "sepal_width_cm"):
 
-# Get the correlation coefficient with numpy.
-petal_corr = np.corrcoef(petal_l, petal_w)
-
-# Create plot with matplotlib subplots.
-fig, ax = plt.subplots()
-
-# Select plot type, x & y data, marker shape, colour.
-ax.plot(petal_l, petal_w, "o", color="tab:purple", alpha=0.5)
-
-# Add regression line to plot.
-ax.plot(petal_l, p_petal(petal_l), "-", color="tab:red",
-        label="Regression Line")
-
-# Set axis labels, title and legend.
-ax.set_xlabel("petal length (in centimetres)")
-ax.set_ylabel("petal width (in centimetres)")
-ax.set_title("Iris Petal Length vs Petal Width")
-ax.legend(loc="upper left")
-
-# Add correlation coefficient to plot.
-# Reference:
-# https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_fontdict.html
-ax.text(1, 2, f"Correlation Coefficient: {petal_corr[0,1:]}")
-
-# Show plot.
-plt.show()
-
-# Plot Petal Length against Petal Width per Class.
-
-# Get petal lengths and petal widths per class from data set.
-setosa_petal_l = iris[iris["class"] == "Iris-setosa"]["petal_length_cm"]
-setosa_petal_w = iris[iris["class"] == "Iris-setosa"]["petal_width_cm"]
-
-versicolor_petal_l = iris[
-    iris["class"] == "Iris-versicolor"]["petal_length_cm"]
-versicolor_petal_w = iris[iris["class"] == "Iris-versicolor"]["petal_width_cm"]
-
-virginica_petal_l = iris[iris["class"] == "Iris-virginica"]["petal_length_cm"]
-virginica_petal_w = iris[iris["class"] == "Iris-virginica"]["petal_width_cm"]
-
-# Get the coefficents for regression lines with numpy.
-setosa_coefficients = np.polyfit(setosa_petal_l, setosa_petal_w, 1)
-p_setosa = np.poly1d(setosa_coefficients)
-
-versicolor_coefficients = np.polyfit(versicolor_petal_l, versicolor_petal_w, 1)
-p_versicolor = np.poly1d(versicolor_coefficients)
-
-virginica_coefficients = np.polyfit(virginica_petal_l, virginica_petal_w, 1)
-p_virginica = np.poly1d(virginica_coefficients)
-
-# Get the correlation coefficient with numpy.
-setosa_corr = np.corrcoef(setosa_petal_l, setosa_petal_w)
-versicolor_corr = np.corrcoef(versicolor_petal_l, versicolor_petal_w)
-virginica_corr = np.corrcoef(virginica_petal_l, virginica_petal_w)
-
-# Create figure with matplotlib subplots.
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 6), sharex=True,
-                                    sharey=True)
-
-# Plot setosa petal length vs petal width.
-ax1.plot(setosa_petal_l, setosa_petal_w, "o", color="tab:green", alpha=0.5)
-
-# Add regression line.
-ax1.plot(setosa_petal_l, p_setosa(setosa_petal_l), "-", color="tab:red",
-         label="Regression Line")
-
-# Plot versicolor petal length vs petal width.
-ax2.plot(versicolor_petal_l, versicolor_petal_w, "o", color="tab:orange",
-         alpha=0.5)
-
-# Add regression line.
-ax2.plot(versicolor_petal_l, p_versicolor(versicolor_petal_l), "-",
-         color="tab:red", label="Regression Line")
-
-# Plot virginica petal length vs petal width.
-ax3.plot(virginica_petal_l, virginica_petal_w, "o", color="tab:blue",
-         alpha=0.5)
-
-# Add regression line.
-ax3.plot(virginica_petal_l, p_virginica(virginica_petal_l), "-",
-         color="tab:red", label="Regression Line")
-
-# Set axis labels, legend, title, text.
-ax1.set_ylabel("petal width (in centimetres)")
-ax1.legend(loc="upper left")
-ax1.set_title("Setosa")
-ax1.text(3, 0.5, f"Correlation Coefficient:\n{setosa_corr[0,1:]}")
-
-ax2.set_xlabel("petal length (in centimetres)")
-ax2.legend(loc="upper left")
-ax2.set_title("Versicolor")
-ax2.text(3, 0.5, f"Correlation Coefficient:\n{versicolor_corr[0,1:]}")
-
-ax3.legend(loc="upper left")
-ax3.set_title("Virginica")
-ax3.text(3, 0.5, f"Correlation Coefficient:\n{virginica_corr[0,1:]}")
-
-fig.suptitle("Petal Length vs Petal Width per Class")
-
-# Show plot.
-plt.show()
-
-# Function to create scatter plot.
-
-
-def scatter_plot():
-
-    # User to input variables.
-    print("Iris dataset variables:")
-    print("petal_length_cm")
-    print("petal_width_cm")
-    print("sepal_length_cm")
-    print("sepal_width_cm")
-    x = input("Enter x axis variable from above list: ")
-    y = input("Enter y axis variable from above list: ")
+        y = input("Error. Please choose y variable from the following:\n"
+                  "\tpetal_length_cm\n"
+                  "\tpetal_width_cm\n"
+                  "\tsepal_length_cm\n"
+                  "\tsepal_width_cm\n"
+                  "Enter y axis variable: ")
 
     # Subsets of the iris dataset by class.
     setosa = iris["class"] == "Iris-setosa"
@@ -332,9 +250,17 @@ def scatter_plot():
 
     # Creat scatter plot.
     fig, ax = plt.subplots()
-    ax.scatter(iris[setosa][x], iris[setosa][y], label="setosa")
-    ax.scatter(iris[versicolor][x], iris[versicolor][y], label="versicolor")
-    ax.scatter(iris[virginica][x], iris[virginica][y], label="virginica")
+
+    ax.scatter(iris[setosa][x], iris[setosa][y], label="setosa",
+               color="tab:green", alpha=0.5)
+
+    ax.scatter(iris[versicolor][x], iris[versicolor][y], label="versicolor",
+               color="tab:orange", alpha=0.5)
+
+    ax.scatter(iris[virginica][x], iris[virginica][y], label="virginica",
+               color="tab:blue", alpha=0.5)
+
+    # Set labels, title and legend.
     ax.set_xlabel(x)
     ax.set_ylabel(y)
     ax.set_title(f"{x_title} vs {y_title}")
@@ -344,5 +270,171 @@ def scatter_plot():
     plt.show()
 
 
-scatter_plot()
-'''
+# Function to display user menu.
+
+def user_menu():
+    choice = input("What would you like to do?\n"
+                   "\t(a) Generate all plots\n"
+                   "\t(b) Generate single plot\n"
+                   "Please enter the letter a or b: ")
+    return choice
+
+
+# Main program.
+
+# Call the user menu function.
+choice = user_menu()
+
+# Call all plots function.
+if choice == "a":
+    all_plots()
+
+# Call single plots function.
+elif choice == "b":
+    single_plot()
+
+
+# 4. FURTHER ANALYSIS
+
+# Function to create scatter plot and add regression line
+# and coefficients to plot.
+def coefficients_plot(x, y):
+
+    # Get the coefficents for regression line with numpy.
+    # Adapted from:
+    # https://www.datacamp.com/tutorial/line-plots-in-matplotlib-with-python#adding-a-matplotlib-regression-line-aregr
+    coefficients = np.polyfit(iris[x], iris[y], 1)
+    best_fit = np.poly1d(coefficients)
+
+    # Get the correlation coefficient (r) with numpy.
+    r = np.corrcoef(iris[x], iris[y])
+
+    # Get the coefficient of determination (R^2).
+    r_squared = r ** 2
+
+    # Create plot with matplotlib subplots.
+    fig, ax = plt.subplots()
+
+    # Select plot type, x & y data, colour.
+    ax.scatter(iris[x], iris[y], color="tab:purple", alpha=0.5)
+
+    # Add regression line to plot.
+    ax.plot(iris[x], best_fit(iris[x]), "-", color="tab:red",
+            label="regression line")
+
+    # Set title.
+    x_title = (x.replace("_", " ").replace(" cm", "").title())
+    y_title = (y.replace("_", " ").replace(" cm", "").title())
+    ax.set_title(f"{x_title} vs {y_title}")
+
+    # Set axis labels and legend.
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
+    ax.legend()
+
+    # Add coefficients to plot.
+    # Reference:
+    # https://matplotlib.org/stable/gallery/text_labels_and_annotations/text_fontdict.html
+    # https://matplotlib.org/stable/users/explain/text/mathtext.html#subscripts-and-superscripts
+    ax.text(iris[x].min(), iris[y].max() - 0.5,
+            f"$ r $ = {r[0,1:]}\n$ R^{2} $ = {r_squared[0,1:]}")
+
+    # Show plot.
+    plt.show()
+
+
+# Call the function
+coefficients_plot("petal_length_cm", "petal_width_cm")
+
+
+# Function to create scatter plots and add regression lines
+# and coefficients for each class.
+
+def coefficients_plot_class(x, y):
+
+    # Get petal lengths and petal widths per class from data set.
+    setosa_x = iris[iris["class"] == "Iris-setosa"][x]
+    setosa_y = iris[iris["class"] == "Iris-setosa"][y]
+
+    versicolor_x = iris[iris["class"] == "Iris-versicolor"][x]
+    versicolor_y = iris[iris["class"] == "Iris-versicolor"][y]
+
+    virginica_x = iris[iris["class"] == "Iris-virginica"][x]
+    virginica_y = iris[iris["class"] == "Iris-virginica"][y]
+
+    # Get the coefficents for regression lines with numpy.
+    setosa_coefficients = np.polyfit(setosa_x, setosa_y, 1)
+    best_fit_setosa = np.poly1d(setosa_coefficients)
+
+    versicolor_coefficients = np.polyfit(versicolor_x, versicolor_y, 1)
+    best_fit_versicolor = np.poly1d(versicolor_coefficients)
+
+    virginica_coefficients = np.polyfit(virginica_x, virginica_y, 1)
+    best_fit_virginica = np.poly1d(virginica_coefficients)
+
+    # Get the correlation coefficients (r) with numpy.
+    setosa_r = np.corrcoef(setosa_x, setosa_y)
+    versicolor_r = np.corrcoef(versicolor_x, versicolor_y)
+    virginica_r = np.corrcoef(virginica_x, virginica_y)
+
+    # Get the coefficient of determination (R^2).
+    setosa_r_sqrd = setosa_r ** 2
+    versicolor_r_sqrd = versicolor_r ** 2
+    virginica_r_sqrd = virginica_r ** 2
+
+    # Create figure with matplotlib subplots.
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 6), sharex=True,
+                                        sharey=True)
+
+    # Plot setosa.
+    ax1.scatter(setosa_x, setosa_y, label="setosa",
+                color="tab:green", alpha=0.5)
+
+    # Add regression line.
+    ax1.plot(setosa_x, best_fit_setosa(setosa_x), "-",
+             color="tab:red", label="regression line")
+
+    # Plot versicolor.
+    ax2.scatter(versicolor_x, versicolor_y, label="versicolor",
+                color="tab:orange", alpha=0.5)
+
+    # Add regression line.
+    ax2.plot(versicolor_x, best_fit_versicolor(versicolor_x), "-",
+             color="tab:red", label="regression line")
+
+    # Plot virginica.
+    ax3.scatter(virginica_x, virginica_y, label="virginica",
+                color="tab:blue", alpha=0.5)
+
+    # Add regression line.
+    ax3.plot(virginica_x, best_fit_virginica(virginica_x), "-",
+             color="tab:red", label="regression line")
+
+    # Set axis labels, legend, title, text.
+    ax1.set_ylabel(y)
+    ax1.legend()
+    ax1.set_title(f"$ r $ = {setosa_r[0,1:]}\n"
+                  f"$ R^{2} $ = {setosa_r_sqrd[0,1:]}",
+                  size="small")
+
+    ax2.set_xlabel(x)
+    ax2.legend()
+    ax2.set_title(f"$ r $ = {versicolor_r[0,1:]}\n"
+                  f"$ R^{2} $ = {versicolor_r_sqrd[0,1:]}",
+                  size="small")
+
+    ax3.legend()
+    ax3.set_title(f"$ r $ = {virginica_r[0,1:]}\n"
+                  f"$ R^{2} $ = {virginica_r_sqrd[0,1:]}",
+                  size="small")
+
+    x_title = (x.replace("_", " ").replace(" cm", "").title())
+    y_title = (y.replace("_", " ").replace(" cm", "").title())
+    fig.suptitle(f"{x_title} vs {y_title} per Class")
+
+    # Show plot.
+    plt.show()
+
+
+# Call the function.
+coefficients_plot_class("petal_length_cm", "petal_width_cm")
