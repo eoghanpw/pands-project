@@ -443,3 +443,5 @@ def coefficients_plot(x, y):
 # Main program to generate scatter plots with regression lines.
 x, y = x_y_variables()
 coefficients_plot(x, y)
+
+# End
