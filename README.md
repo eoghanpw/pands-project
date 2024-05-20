@@ -1,7 +1,7 @@
 # Programming and Scripting Project: Fisher's Iris Dataset
 
 *Author: Eoghan Walsh*
-***
+
 [Programming and Scripting](https://www.gmit.ie/programming-and-scripting) project that uses python to generate histograms and scatter plots to assist with visualization and investigation of Fisher's Iris dataset.
 
 ## About the data
@@ -47,9 +47,9 @@ This project uses python code to complete the following tasks:
     iris = pd.read_csv("iris.csv", names=column_names)
     ```
 
-## Examples of what the project does
+## What the project does
 
-1. The `variable_summary()` function will generate below summary statistics of the dataset variables and output to a .txt file called iris_variable_summary.txt.
+1. The `variable_summary()` function will generate the below summary statistics of the dataset variables and output to a .txt file called iris_variable_summary.txt.
 
     | |sepal_length_cm|sepal_width_cm|petal_length_cm|petal_width_cm|
     |---|---:|---:|---:|---:|
@@ -134,7 +134,7 @@ This project uses python code to complete the following tasks:
 
 ***
 
-4. The below program will call the `x_y_variables()` function to prompt the user to select the x and y variables and call the `coefficients_plot()` function generate scatter plots with regression lines and also display the correlation coefficient $ (r) $ and the coefficient of determination $ (R^{2}) $.
+4. The below program will call the `x_y_variables()` function to prompt the user to select the x and y variables and call the `coefficients_plot()` function to generate scatter plots with regression lines and displaying the correlation coefficient $ (r) $ and the coefficient of determination $ (R^{2}) $.
 
     ```python
     x, y = x_y_variables()
